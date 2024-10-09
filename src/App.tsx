@@ -1,8 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from 'react'
+//import reactLogo from './assets/react.svg'
+//import viteLogo from '/vite.svg'
 import './App.css'
 
+import AppointmentScheduler from './components/AppointmentScheduler';
+import AppointmentDateTimeSelector from './components/AppointmentDateTimeSelector';
+import AppointmentUserDetails from './components/AppointmentUserDetails';
+
+const AppointmentFlow = () => {
+  const [step, setStep] = useState(1);
+  const [appointmentType, setAppointmentType] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState('');
+
+  const handleTypeSelection = (type) => {
+    setAppointmentType(type);
+    setStep(2);
+  };
+
+  const handleDateTimeSelection = (date, time) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setStep(3);
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+  };
+
+  switch (step) {
+    case 1:
+      return <AppointmentScheduler onContinue={handleTypeSelection} />;
+    case 2:
+      return (
+        <AppointmentDateTimeSelector
+          appointmentType={appointmentType}
+          onBack={handleBack}
+          onContinue={handleDateTimeSelection}
+        />
+      );
+    case 3:
+      return (
+        <AppointmentUserDetails
+          appointmentType={appointmentType}
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+          onBack={handleBack}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
+const App = () => {
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Sayen Solutions Appointment Scheduling</h1>
+      <AppointmentFlow />
+    </div>
+  );
+};
+
+export default App;
+
+/*
 function App() {
   const [count, setCount] = useState(0)
 
@@ -33,3 +95,4 @@ function App() {
 }
 
 export default App
+*/
